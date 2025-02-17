@@ -5,10 +5,8 @@ const ValidationHelper = require("../lib/validation.helper");
 const payFormGenerator = require("../lib/payform.generator");
 
 const SHA256 = require("../lib/sha256");
-const shaEncrypt = new SHA256();
 
 const ASE256 = require("../lib/aes256");
-const aseEncrypt = new ASE256();
 
 const querystring = require("querystring");
 
@@ -47,9 +45,11 @@ class MpgService {
     model.Version = model.Version || spApiVersion;
     model.MerchantID = this.config.MerchantID;
 
+    const aseEncrypt = new ASE256(this.config.HashKey, this.config.HashIV);
     model.TradeInfo = aseEncrypt.encrypt(querystring.stringify(model));
 
-    model.TradeSha = shaEncrypt.encrypt(model.Email).toUpperCase();
+    const shaEncrypt = new SHA256(this.config.HashKey, this.config.HashIV);
+    model.TradeSha = shaEncrypt.encryptWithKeyIv(model.TradeInfo).toUpperCase();
 
     log.debug("payModel", payModel);
     let html = payFormGenerator(
