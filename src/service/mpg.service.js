@@ -94,9 +94,7 @@ class MpgService {
     const aseEncrypt = new ASE256(this.config.HashKey, this.config.HashIV);
     const result = aseEncrypt.decrypt(payload.TradeInfo);
 
-    return Promise.resolve().then(() => {
-      return JSON.parse(result);
-    });
+    return JSON.parse(result);
   }
 
   /**
