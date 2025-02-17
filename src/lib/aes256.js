@@ -18,8 +18,8 @@ class AES256Crypto {
     let text = decrypt.update(encryptedText, "hex", "utf8");
     let plainText = text + decrypt.final("utf8");
     // erase ascii 0-32  都要清掉
-    let result = plainText.replace(/[\x00-\x20]+/g, "");
-    return result;
+    // let result = plainText.replace(/[\x00-\x20]+/g, "");
+    return plainText;
   }
 }
 
