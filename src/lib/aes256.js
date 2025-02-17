@@ -17,9 +17,11 @@ class AES256Crypto {
     decrypt.setAutoPadding(false);
     let text = decrypt.update(encryptedText, "hex", "utf8");
     let plainText = text + decrypt.final("utf8");
+    console.log({ plainText });
+
     // erase ascii 0-32  都要清掉
-    // let result = plainText.replace(/[\x00-\x20]+/g, "");
-    return plainText;
+    let result = plainText.replace(/[\x00-\x20]+/g, "");
+    return result;
   }
 }
 
