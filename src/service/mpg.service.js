@@ -7,6 +7,11 @@ const payFormGenerator = require("../lib/payform.generator");
 const SHA256 = require("../lib/sha256");
 const shaEncrypt = new SHA256();
 
+const ASE256 = require("../lib/aes256");
+const aseEncrypt = new ASE256();
+
+const querystring = require("querystring");
+
 const modelPivot = require("../model/model.pivot");
 const MpgPayModel = modelPivot.MPG.MpgPayModel;
 const MpgNotifyModel = modelPivot.MPG.MpgNotifyModel;
@@ -42,15 +47,20 @@ class MpgService {
     model.Version = model.Version || spApiVersion;
     model.MerchantID = this.config.MerchantID;
 
-    model.TokenTerm = shaEncrypt.encrypt(model.Email).toUpperCase();
-    model.CheckValue = this.validationHelper.genMpgCheckValue(
-      model.Amt,
-      model.MerchantOrderNo,
-      model.TimeStamp,
-      model.Version
-    );
+    model.TradeInfo = aseEncrypt.encrypt(querystring.stringify(model));
+
+    model.TradeSha = shaEncrypt.encrypt(model.Email).toUpperCase();
+
     log.debug("payModel", payModel);
-    let html = payFormGenerator(model, this.apiUrl);
+    let html = payFormGenerator(
+      {
+        MerchantID: model.MerchantID,
+        Version: model.Version,
+        TradeInfo: model.TradeInfo,
+        TradeSha: model.TradeSha,
+      },
+      this.apiUrl
+    );
     log.debug("payFormHtml", html);
     return html;
   }
