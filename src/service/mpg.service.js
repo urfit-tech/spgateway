@@ -93,7 +93,6 @@ class MpgService {
   parseNotification(payload) {
     const aseEncrypt = new ASE256(this.config.HashKey, this.config.HashIV);
     const result = aseEncrypt.decrypt(payload.TradeInfo);
-    console.log({ payload, result });
 
     return JSON.parse(result);
   }
