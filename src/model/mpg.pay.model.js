@@ -1,46 +1,45 @@
 const BaseModel = require("./base.model");
 
 module.exports = class MpgPayModel extends BaseModel {
+  constructor(data) {
+    super();
 
-    constructor(data) {
-        super();
-
-        /**
+    /**
             商店代號
             V
             Varchar(15)
             智付通商店代號。
          */
-        this.MerchantID = "";
-        /**
+    this.MerchantID = "";
+    /**
             回傳格式
             V
             Varchar(6)
             JSON或是String。
          */
-        this.RespondType = "JSON";
+    this.RespondType = "JSON";
 
-        /**
-
-         */
-        this.Version = "1.2";
-
-        /**
+    /**
 
          */
-        this.CheckValue = "";
+    this.Version = "2.2";
 
-        /**
+    /**
+
+         */
+    this.CheckValue = "";
+
+    /**
             時間戳記
             V
             Varchar(50)
             例：2014-05-15 15:00:00(+08:00 時區)這個時間的時間戳記為1400137200。
          */
-        this.TimeStamp = new Date().getTime();
+    this.TimeStamp = new Date().getTime();
 
-        this.LangType = "zh-tw";
+    this.LangType = "zh-tw";
 
-        /**
+    /**
             商店訂單編號
             V
             Varchar(20)
@@ -48,27 +47,27 @@ module.exports = class MpgPayModel extends BaseModel {
             2.長度限制為20字。
             3.同一商店中此編號不可重覆。
          */
-        this.MerchantOrderNo = "";
+    this.MerchantOrderNo = "";
 
-        /**
+    /**
             訂單金額
             V
             int(10)
             1.純數字不含符號，例：1000。
             2.幣別：新台幣。
          */
-        this.Amt = 0;
+    this.Amt = 0;
 
-        /**
+    /**
             商品資訊
             V
             Varchar(50)
             1.限制長度為50字。
             2.編碼為Utf-8格式。
          */
-        this.ItemDesc = "";
+    this.ItemDesc = "";
 
-        /**
+    /**
             交易限制秒數
             Int(3)
             1.限制交易的秒數，當秒數倒數至0時，交易當做失敗。
@@ -77,9 +76,9 @@ module.exports = class MpgPayModel extends BaseModel {
             4.秒數上限為900秒，當超過900秒時，會以900秒計算。
             5.若未帶此參數，或是為0時，會視作為不啟用交易限制秒數。
          */
-        this.TradeLimit = 600;
+    this.TradeLimit = 600;
 
-        /**
+    /**
             繳費有效期限
             Varchar(10)
             1.格式為 date('Ymd') ，例：20140620
@@ -87,48 +86,48 @@ module.exports = class MpgPayModel extends BaseModel {
               例：2014-06-23 14:35:51完成取號，則繳費有效期限為2014-06-29 23:59:59。
             3.可接受最大值為180天。
          */
-        this.ExpireDate = "";
+    this.ExpireDate = "";
 
-        /**
+    /**
             支付完成 返回商店網址
             Varchar(50)
             1.交易完成後，以 Form Post 方式導回商店頁面。
             2.若為空值，交易完成後，消費者將停留在智付通付款或取號完成頁面。
             3.只接受80與443 Port。
          */
-        this.ReturnURL = "";
+    this.ReturnURL = "";
 
-        /**
+    /**
             支付通知網址
             Varchar(50)
             1.以幕後方式回傳給商店相關支付結果資料
          */
-        this.NotifyURL = "";
+    this.NotifyURL = "";
 
-        /**
+    /**
             商店取號網址
             Varchar(50)
             1.系統取號後以 form post 方式將結果導回商店指定的網址
             2.此參數若為空值，則會顯示取號結果在智付通頁面。
          */
-        this.CustomerURL = "";
-        /**
+    this.CustomerURL = "";
+    /**
             商店取號網址
             Varchar(50)
             1.系統取號後以 form post 方式將結果導回商店指定的網址
             2.此參數若為空值，則會顯示取號結果在智付通頁面
          */
-        this.ClientBackURL = "";
+    this.ClientBackURL = "";
 
-        /**
+    /**
             付款人電子信箱
             V
             Varchar(50)
             於交易完成或付款完成時，通知付款人使用。
          */
-        this.Email = "";
+    this.Email = "";
 
-        /**
+    /**
             付款人電子信箱是否開放修改
             Int(1)
             1.設定於MPG頁面，付款人電子信箱欄位是否開放讓付款人修改。
@@ -136,25 +135,25 @@ module.exports = class MpgPayModel extends BaseModel {
             0=不可修改
             2.當未提供此參數時，將預設為可修改。
          */
-        this.EmailModify = 0;
+    this.EmailModify = 0;
 
-        /**
+    /**
             智付通會員
             V
             Int(1)
             1 = 須要登入智付通會員 0 = 不須登入智付通會員
          */
-        this.LoginType = 0;
+    this.LoginType = 0;
 
-        /**
+    /**
             商店備註
             Varchar(300)
             1.限制長度為300字。
             2.若有提供此參數，將會於MPG頁面呈現商店備註內容。
          */
-        this.OrderComment = "";
+    this.OrderComment = "";
 
-        /**
+    /**
             信用卡
             一次付清啟用
             Int(1)
@@ -162,9 +161,9 @@ module.exports = class MpgPayModel extends BaseModel {
             1 =啟用
             0或者未有此參數=不啟用
          */
-        this.CREDIT = 1;
+    this.CREDIT = 1;
 
-        /**
+    /**
             信用卡
             分期付款啟用
             Varchar(18)
@@ -177,33 +176,33 @@ module.exports = class MpgPayModel extends BaseModel {
             3. 同時開啟多期別，將此參數用 ”，”(半 形)分隔，例如： 分隔，例如： 3,6,9，代表開啟 分 3、 6、9 期的功能。
             4. 此欄位值 此欄位值 =０或無值時，即代表不開啟分期
          */
-        this.InsFlag = "";
+    this.InsFlag = "";
 
-        /**
+    /**
             信用卡
             銀聯卡啟用
             Int(1)
             1.設定是否啟用銀聯卡支付方式。 1= 啟用 0或者未有此參數 或者未有此參數 或者未有此參數 =不啟用
          */
-        this.UNIONPAY = 0;
+    this.UNIONPAY = 0;
 
-        /**
+    /**
             WEBATM啟用
             Int(1)
             1.設定是否啟用WEBATM支付方式。
             1=啟用 0或者未有此參數，即代表不開啟。
          */
-        this.WEBATM = 0;
+    this.WEBATM = 0;
 
-        /**
+    /**
             ATM轉帳啟用
             Int(1)
             1.設定是否啟用ATM轉帳支付方式。
             1 = 啟用 0或者未有此參數，即代表不開啟。
          */
-        this.VACC = 1;
+    this.VACC = 1;
 
-        /**
+    /**
             超商代碼繳費
             啟用
             Int(1)
@@ -211,29 +210,30 @@ module.exports = class MpgPayModel extends BaseModel {
             1 = 啟用 0或者未有此參數，即代表不開啟。
             2.當該筆訂單金額小於30元或超過2萬元時，即使此參數設定為啟用，MPG付款頁面仍不會顯示此支付方式選項。
          */
-        this.CVS = 0;
+    this.CVS = 0;
 
-        /**
+    /**
             條碼繳費啟用
             Int(1)
             1.設定是否啟用條碼繳費支付方式
             1 = 啟用 0或者未有此參數，即代表不開啟。
             2.當該筆訂單金額小於20元或超過2萬元時，即使此參數設定為啟用，MPG付款頁面仍不會顯示此支付方式選項。
          */
-        this.BARCODE = 0;
+    this.BARCODE = 0;
 
-        /**
+    /**
             自訂支付啟用
             Int(1)
             1.設定是否啟用自訂支付支付方式
             1=啟用 0或者未有此參數，即代表不開啟。
          */
-        this.CUSTOM = 0;
+    this.CUSTOM = 0;
 
-        /**
+    /**
          付款人綁定信用卡資料
          */
-        this.TokenTerm = "";
-        this.mappingFrom(data);
-    }
+    this.TokenTerm = "";
+    this.mappingFrom(data);
+  }
 };
+
