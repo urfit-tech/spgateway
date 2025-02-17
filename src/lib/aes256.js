@@ -7,6 +7,8 @@ class AES256Crypto {
   }
 
   encrypt(plainText) {
+    console.log("\x1b[41m%s\x1b[0m", plainText, this.key, this.iv);
+
     let encrypt = crypto.createCipheriv("aes256", this.key, this.iv);
     let enc = encrypt.update(plainText, "utf8", "hex");
     return enc + encrypt.final("hex");
