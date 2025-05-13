@@ -24,25 +24,40 @@ describe("mpg service", function () {
             assert.equal(checkValue, expected);
         });
 
-    
-    });
-  
-  
-    describe("mpg parse notification", function () {
-        it("should pass without error", function (done) {
-            let jsonData = mpgRes.responseBody.JSONData;
 
-            mpgService.parseNotification(jsonData)
-                .then((notify) => {
-                    assert.equal(notify.Status, "SUCCESS");
-                    done();
-                })
-                .catch((err) => {
-                    done(err);
-                });
-     
+    });
+
+
+    describe("mpg parse notification", function () {
+        it("sshould parse v1.1 format correctly", function (done) {
+            const jsonData = mpgRes.v1.responseBody.JSONData;
+            try {
+                const notify = mpgService.parseNotification(jsonData)
+
+                assert.equal(notify.Status, "SUCCESS");
+
+                done();
+            } catch (err) {
+                done(err);
+            }
         });
 
+    });
+
+    describe("mpg parse notification v2.2", function () {
+        it("should parse v2.2 format correctly", function (done) {
+            const v2Data = mpgRes.v2.objectFormat;
+
+            try {
+                const notify = mpgService.parseNotification(v2Data);
+
+                assert.equal(notify.Status, "SUCCESS");
+
+                done();
+            } catch (err) {
+                done(err);
+            }
+        });
     });
 
 });
