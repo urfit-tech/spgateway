@@ -73,6 +73,7 @@ class MpgService {
     model.Version = model.Version || spApiVersion;
     model.MerchantID = this.config.MerchantID;
 
+    const shaEncrypt = new SHA256(this.config.HashKey, this.config.HashIV);
     model.TokenTerm = shaEncrypt.encrypt(model.Email).toUpperCase();
     model.CheckValue = this.validationHelper.genMpgCheckValue(
       model.Amt,
@@ -97,7 +98,7 @@ class MpgService {
         const result = aseEncrypt.decrypt(data.TradeInfo);
         return JSON.parse(result);
       } catch (error) {
-        throw new Error(`v2.2解析失敗: ${error.message}`);
+        throw new Error(`v2.2解析失敗 [MID:${data.MerchantID}]: ${error.message}, 資料: ${JSON.stringify(data)}`);
       }
     }
 
@@ -113,12 +114,12 @@ class MpgService {
       );
 
       if (checkCode !== resultModel.CheckCode) {
-        throw new Error("CheckCode驗證失敗");
+        throw new Error(`CheckCode驗證失敗, 計算: ${checkCode}, 接收: ${resultModel.CheckCode}`);
       }
 
       return model;
     } catch (error) {
-      throw new Error(`v1.1解析失敗: ${error.message}`);
+      throw new Error(`v1.1解析失敗 [MID:${data.MerchantID}]: ${error.message}, 資料: ${JSON.stringify(data)}`);
     }
   }
 
