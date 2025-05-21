@@ -30,9 +30,9 @@ describe("mpg service", function () {
 
     describe("mpg parse notification", function () {
         it("sshould parse v1.1 format correctly", function (done) {
-            const jsonData = mpgRes.v1.responseBody.JSONData;
+            const responseBody = mpgRes.v1.responseBody;
             try {
-                const notify = mpgService.parseNotification(jsonData)
+                const notify = mpgService.parseNotification(responseBody)
 
                 assert.equal(notify.Status, "SUCCESS");
 
