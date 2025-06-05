@@ -43,24 +43,42 @@ class MpgService {
     model.Version = model.Version || spApiVersion;
     model.MerchantID = this.config.MerchantID;
 
-    const aseEncrypt = new ASE256(this.config.HashKey, this.config.HashIV);
-    model.TradeInfo = aseEncrypt.encrypt(querystring.stringify(model));
 
-    const shaEncrypt = new SHA256(this.config.HashKey, this.config.HashIV);
-    model.TradeSha = shaEncrypt.encryptWithKeyIv(model.TradeInfo).toUpperCase();
 
-    log.debug("payModel", payModel);
-    let html = payFormGenerator(
-      {
-        MerchantID: model.MerchantID,
-        Version: model.Version,
-        TradeInfo: model.TradeInfo,
-        TradeSha: model.TradeSha,
-      },
-      this.apiUrl
-    );
-    log.debug("payFormHtml", html);
-    return html;
+    if (model.Version === "1.1") {
+      const shaEncrypt = new SHA256();
+      model.TokenTerm = shaEncrypt.encrypt(model.Email).toUpperCase();
+      model.CheckValue = this.validationHelper.genMpgCheckValue(
+        model.Amt,
+        model.MerchantOrderNo,
+        model.TimeStamp,
+        model.Version
+      );
+      
+      log.debug("payModel V1.1", payModel);
+      let html = payFormGenerator(model, this.apiUrl);
+      log.debug("payFormHtml V1.1", html);
+      return html;
+    } else {
+      const aseEncrypt = new ASE256(this.config.HashKey, this.config.HashIV);
+      model.TradeInfo = aseEncrypt.encrypt(querystring.stringify(model));
+
+      const shaEncrypt = new SHA256(this.config.HashKey, this.config.HashIV);
+      model.TradeSha = shaEncrypt.encryptWithKeyIv(model.TradeInfo).toUpperCase();
+
+      log.debug("payModel V2.2", payModel);
+      let html = payFormGenerator(
+        {
+          MerchantID: model.MerchantID,
+          Version: model.Version,
+          TradeInfo: model.TradeInfo,
+          TradeSha: model.TradeSha,
+        },
+        this.apiUrl
+      );
+      log.debug("payFormHtml V2.2", html);
+      return html;
+    }
   }
 
   /**
